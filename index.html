@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شركة الأطيبان A.M.B لتمور الوادي</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="login-page" class="active">
+        <div class="login-container">
+            <img src="img1.png" alt="شعار الشركة" class="logo">
+            <h1>شركة الأطيبان A.M.B لتمور الوادي</h1>
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="username">اسم المستخدم:</label>
+                    <input type="text" id="username" placeholder="اسم المستخدم">
+                </div>
+                <div class="form-group">
+                    <label for="password">كلمة المرور:</label>
+                    <input type="password" id="password" placeholder="كلمة المرور">
+                </div>
+                <button onclick="login()">تسجيل الدخول</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-page" class="hidden">
+        <header>
+            <img src="img1.png" alt="شعار الشركة" class="logo">
+            <h1>شركة الأطيبان A.M.B لتمور الوادي</h1>
+            <div class="datetime">
+                <div id="clock"></div>
+                <div id="date"></div>
+            </div>
+        </header>
+
+        <nav>
+            <select id="monthSelect">
+                <option value="">اختر الشهر</option>
+                <option value="1">يناير</option>
+                <option value="2">فبراير</option>
+                <option value="3">مارس</option>
+                <option value="4">أبريل</option>
+                <option value="5">مايو</option>
+                <option value="6">يونيو</option>
+                <option value="7">يوليو</option>
+                <option value="8">أغسطس</option>
+                <option value="9">سبتمبر</option>
+                <option value="10">أكتوبر</option>
+                <option value="11">نوفمبر</option>
+                <option value="12">ديسمبر</option>
+            </select>
+            <div id="menuButtons" class="hidden">
+                <button onclick="showSection('products')">قائمة الأصناف</button>
+                <button onclick="showSection('purchaseInvoice')">سجل فاتورة الشراء</button>
+                <button onclick="showSection('salesInvoice')">سجل فاتورة البيع</button>
+            </div>
+        </nav>
+
+        <main>
+            <section id="products" class="hidden">
+                <div class="product-buttons">
+                    <button onclick="showProductForm('dates')">علبة تمر</button>
+                    <button onclick="showProductForm('ajwa')">علبة عجوة</button>
+                    <button onclick="showProductForm('biscuits')">بسكوت بالتمر</button>
+                    <button onclick="showProductForm('juice')">علبة عصير تمر</button>
+                </div>
+            </section>
+
+            <section id="productForm" class="hidden">
+                <h2 id="productTitle"></h2>
+                <form id="itemForm">
+                    <div class="form-group">
+                        <label>اسم الصنف:</label>
+                        <input type="text" id="productName" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>كمية الصنف:</label>
+                        <input type="number" id="quantity" onchange="calculateRemaining()">
+                        <span id="quantityUnit"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>سعر الصنف الواحد:</label>
+                        <input type="number" id="unitPrice" onchange="calculateTotal()">
+                        <span>جنيه مصري</span>
+                    </div>
+                    <div class="form-group">
+                        <label>عدد الأصناف الحالية:</label>
+                        <input type="number" id="currentStock" onchange="calculateRemaining()">
+                    </div>
+                    <div class="form-group">
+                        <label>عدد الأصناف المباعة:</label>
+                        <input type="number" id="soldItems" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>عدد الأصناف المتبقية:</label>
+                        <input type="number" id="remainingItems" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>الإجمالي:</label>
+                        <input type="number" id="total" readonly>
+                        <span>جنيه مصري</span>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" onclick="saveTemp()">حفظ مؤقت</button>
+                        <button type="button" onclick="deleteData()">حذف البيانات</button>
+                        <button type="button" onclick="restoreData()">استعادة البيانات</button>
+                        <button type="button" onclick="addToInvoices()">إضافة البيانات</button>
+                    </div>
+                </form>
+            </section>
+
+            <section id="purchaseInvoice" class="hidden">
+                <h2>سجل فاتورة الشراء</h2>
+                <table id="purchaseTable">
+                    <thead>
+                        <tr>
+                            <th>اسم الصنف</th>
+                            <th>نوع الصنف</th>
+                            <th>كمية الصنف</th>
+                            <th>سعر الصنف الواحد</th>
+                            <th>الإجمالي</th>
+                            <th>عدد الأصناف المباعة</th>
+                            <th>حذف</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div class="invoice-buttons">
+                    <button onclick="printInvoice('purchase')">طباعة</button>
+                    <button onclick="saveInvoice('purchase')">حفظ</button>
+                </div>
+            </section>
+
+            <section id="salesInvoice" class="hidden">
+                <h2>سجل فاتورة البيع</h2>
+                <table id="salesTable">
+                    <thead>
+                        <tr>
+                            <th>اسم الصنف</th>
+                            <th>نوع الصنف</th>
+                            <th>كمية الصنف</th>
+                            <th>المخزون الحالي</th>
+                            <th>عدد الأصناف المتبقية</th>
+                            <th>عدد الأصناف المباعة</th>
+                            <th>سعر الوحدة (جنيه)</th>
+                            <th>حذف</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div class="invoice-buttons">
+                    <button onclick="printInvoice('sales')">طباعة</button>
+                    <button onclick="saveInvoice('sales')">حفظ</button>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
